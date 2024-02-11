@@ -1,7 +1,36 @@
 .App {
   text-align: center;
+  color: white;
+  background-color: rebeccapurple;
 }
-
+.table-wrapper {
+  background-color: white;
+  padding: 2%;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  margin-top: 3%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0px 5px 7px blue;
+  display: flex;
+}
+.table-head {
+  background-color: greenyellow
+}
+.votingBtn {
+  background-color: aqua;
+  color: aliceblue;
+  border: none;
+  border-radius: 0px;
+  margin-top: 25px;
+  padding: 10px;
+  width: 60px;
+  cursor: pointer;
+}
+.votingBtn:hover {
+  background-color: rgb(13, 139, 13);
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

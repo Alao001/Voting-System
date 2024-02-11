@@ -4,6 +4,18 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { Voting } from './contracts/voting';
+import artifact from '../artifacts/voting.json'
+import { Scrypt, bsv } from 'scrypt-ts';
+
+Voting.loadArtifact(artifact)
+
+Scrypt.init({
+  apiKey:process.env
+  .REACT_APP_API_KEY || 'testnet_Kc6yPayPTPMti3Ss2T87FTlIv6fFWaE0n4N2gAZXE1tFTmie',
+  network :bsv.Networks.testnet
+})
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs'
-import { Voting } from '../src/contracts/voting'
+import { Voting ,N, Car, CarBrand} from '../src/contracts/voting'
 import { privateKey } from './privateKey'
-import { bsv, TestWallet, DefaultProvider, sha256 } from 'scrypt-ts'
+import { bsv, TestWallet, DefaultProvider, sha256, FixedArray, toByteString } from 'scrypt-ts'
 
 function getScriptHash(scriptPubKeyHex: string) {
     const res = sha256(scriptPubKeyHex).match(/.{2}/g)
@@ -21,11 +21,16 @@ async function main() {
     }))
 
     // TODO: Adjust the amount of satoshis locked in the smart contract:
-    const amount = 100
-
+    const amount = 1
+    const Names: FixedArray<CarBrand, 4> = [
+        toByteString('toyota', true),
+        toByteString('mazda', true),
+        toByteString('benz', true),
+        toByteString('honda', true),
+    ];
     const instance = new Voting(
-        // TODO: Pass constructor parameter values.
-        0n
+        // TODO: Adjust constructor parameter values:
+        Names
     )
 
     // Connect to a signer.

@@ -1,32 +1,66 @@
 import {
+    assert,
+    ByteString,
+    hash256,
     method,
     prop,
     SmartContract,
-    hash256,
-    assert,
-    SigHash
+    FixedArray,
+    fill,
+    toByteString,
 } from 'scrypt-ts'
 
-import type {ByteString} from 'scrypt-ts';
+export type CarBrand = ByteString
+
+export type Car = {
+    name: CarBrand 
+    votesReceived: bigint
+}
+export const N = 4
+
+export type Cars = FixedArray<Car, typeof N>
 
 export class Voting extends SmartContract {
     @prop(true)
-    count: bigint
+    cars: Cars
 
-    constructor(count: bigint) {
-        super(count)
-        this.count = count
+    constructor(carBrands: FixedArray<CarBrand, typeof N>) {
+        super(...arguments)
+        this.cars = fill(
+            {
+                name: toByteString(''),
+                votesReceived: 0n,
+            },
+            N
+        )
+
+        for (let i = 0; i < N; i++) {
+            this.cars[i] = {
+                name: carBrands[i],
+                votesReceived: 0n,
+            }
+        }
     }
 
-    @method(SigHash.SINGLE)
-    public increment() {
-        this.count++
+    /**
+     * vote for a candidate
+     * @param candidate candidate's name
+     */
+    @method()
+    public vote(car: CarBrand) {
+        this.increaseVotesReceived(car)
+        // output containing the latest state and the same balance
+        let outputs: ByteString = this.buildStateOutput(this.ctx.utxo.value)
+        outputs += this.buildChangeOutput()
+        assert(this.ctx.hashOutputs == hash256(outputs), 'hashOutputs mismatch')
+    }
 
-        // make sure balance in the contract does not change
-        const amount: bigint = this.ctx.utxo.value
-        // output containing the latest state
-        const output: ByteString = this.buildStateOutput(amount)
-        // verify current tx has this single output
-        assert(this.ctx.hashOutputs === hash256(output), 'hashOutputs mismatch')
+    @method()
+    increaseVotesReceived(car: CarBrand): void {
+        for (let i = 0; i < N; i++) {
+            if (this.cars[i].name == car) {
+                this.cars[i].votesReceived++
+            }
+        }
     }
 }
