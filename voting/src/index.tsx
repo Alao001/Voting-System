@@ -12,7 +12,7 @@ Voting.loadArtifact(artifact)
 
 Scrypt.init({
   apiKey:process.env
-  .REACT_APP_API_KEY || 'Input-your-Api-Key',
+  .REACT_APP_API_KEY || '',
   network :bsv.Networks.testnet
 })
 
